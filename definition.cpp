@@ -1,6 +1,6 @@
 #include <string>
 #include "util.hpp"
-
+#include <iostream>
 
 bool process_template(std::string def, std::string& out) {
   out = def;
@@ -32,6 +32,10 @@ bool process_template(std::string def, std::string& out) {
 
   //std::cerr<<"PAGELINK:" <<pagelink<<std::endl;
 
+
+  //w templates are described at https://fr.wiktionary.org/wiki/Mod%C3%A8le:w
+  
+  
   out = def.substr(0,check) 
     + def.substr( end+2 , std::string::npos) ;
 
