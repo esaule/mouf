@@ -1,11 +1,9 @@
 #include <tinyxml2.h>
 #include <iostream>
 #include <sstream>
+#include "util.hpp"
+#include "definition.hpp"
 
-bool starts_with(const std::string& toCheck,
-		 const std::string& prefix) {
-  return (toCheck.rfind(prefix, 0) == 0);
-}
 
 char genre (const std::string& line) {
   std::stringstream ss (line);
@@ -24,22 +22,7 @@ char genre (const std::string& line) {
   return '?';
 }
 
-bool process_definition(std::string def, std::string& out) {
-  out = def;
-  return false;
-}
 
-std::string process_definition(std::string def) {
-
-  std::string out;
-
-  while (process_definition(def, out)) {
-    def = out;
-    out = "";
-  }
-  
-  return out;
-}
 
 void extract_definition(const std::string& wikicode) {
 
@@ -83,7 +66,7 @@ void extract_definition(const std::string& wikicode) {
       std::cout<<genre(line)<<std::endl;
     }
     if (starts_with(line, "# ")) {
-      std::cout<<"DEFINITION :"<<line<<std::endl;
+      //      std::cout<<"DEFINITION :"<<line<<std::endl;
       std::cout<<process_definition(line.substr(2, line.length()))<<std::endl;
     }
     if (starts_with(line, "#* ")) {
@@ -105,17 +88,30 @@ bool page(tinyxml2::XMLNode* page, std::string target) {
   
   tinyxml2::XMLNode* title = page->FirstChildElement("title");
 
+  if (title == nullptr) return false;
+  
   //std::cout<<title->Value()<<std::endl;
 
   std::string word ( title->FirstChild()->ToText()->Value());
 
-  if (word.compare(target) != 0) return false;
+  if (target.compare("-") != 0
+      && word.compare(target) != 0) return false;
   
   std::cout<<word<<std::endl;
-    
-  tinyxml2::XMLNode* text = page->FirstChildElement("revision")->FirstChildElement("text");
+
+  auto rev = page->FirstChildElement("revision");
+
+  if (rev == nullptr) return false;
   
-  std::string definition ( text->FirstChild()->ToText()->Value());
+  tinyxml2::XMLNode* text = rev->FirstChildElement("text");
+
+  if (text == nullptr) return false;
+
+  auto realtext = text->FirstChild();
+
+  if (realtext == nullptr) return false;
+  
+  std::string definition ( realtext->ToText()->Value());
   
   // std::cout<< definition <<std::endl;
 
@@ -136,11 +132,13 @@ int main(int argc, char* argv[]) {
 
   tinyxml2::XMLNode* currentpage = root->FirstChildElement("page");
 
+  std::string target = argv[1];
+  
   while (currentpage) {
     
-    bool ret = page(currentpage, argv[1]);
+    bool ret = page(currentpage, target);
 
-    if (ret)
+    if (ret && target.compare("-") != 0)
       break;
     
     currentpage = currentpage->NextSiblingElement("page");
