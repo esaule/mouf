@@ -5,14 +5,20 @@
 #include "definition.hpp"
 #include "genre.hpp"
 
-void extract_definition(const std::string& wikicode) {
-
+void extract_definition(const std::string& wikicode, std::string w) {
   std::stringstream ss(wikicode);
 
   std::string line;
 
+  std::string word = w;
+  std::string def;
+  char gen = '?';
+  
   bool in_fr_section = false;
   bool in_noun_subsection = false;
+  bool got_genre = false;
+  bool got_definition = false;
+
   
   while (getline(ss, line , '\n')) {
     if (line.compare("== {{langue|fr}} ==") == 0) {
@@ -31,6 +37,9 @@ void extract_definition(const std::string& wikicode) {
     //then search for nom sections
     if (starts_with(line, "=== {{S|nom|fr")) {
       in_noun_subsection = true;
+      got_definition = false;
+      got_genre = false;
+      gen = '?';
       //std::cout<<"NEWNOUN :"<<line<<std::endl;
       goto end;
     }
@@ -44,17 +53,30 @@ void extract_definition(const std::string& wikicode) {
     
     if (starts_with(line, "'''")) {
       //std::cout<<"GENRE :"<<line<<std::endl;
-      std::cout<<genre(line)<<std::endl;
+      //std::cout<<genre(line)<<std::endl;
+      gen = genre(line);
+      got_genre = true;
     }
     if (starts_with(line, "# ")) {
       //      std::cout<<"DEFINITION :"<<line<<std::endl;
-      std::cout<<process_definition(line.substr(2, line.length()))<<std::endl;
+      //std::cout<<process_definition(line.substr(2, line.length()))<<std::endl;
+      def = process_definition(line.substr(2, line.length()));
+      got_definition = true;
     }
     if (starts_with(line, "#* ")) {
       //std::cout<<"EXAMPLE :"<<line<<std::endl;
     }
     
-  end:;
+  end:
+    if (got_genre && got_definition) {
+      if (gen == '?')
+	std::cerr<<word<<"\t"<<gen<<"\t"<<def<<std::endl;
+      else
+	std::cout<<word<<"\t"<<gen<<"\t"<<def<<std::endl;
+
+      got_genre = false;
+      got_definition = false;
+    }
     /*
     std::cout<<(in_fr_section?"infr":"outfr")<<" "
 	     <<(in_noun_subsection?"nom":"notnom")<<" "
@@ -78,7 +100,7 @@ bool page(tinyxml2::XMLNode* page, std::string target) {
   if (target.compare("-") != 0
       && word.compare(target) != 0) return false;
   
-  std::cout<<word<<std::endl;
+  //std::cout<<word<<std::endl;
 
   auto rev = page->FirstChildElement("revision");
 
@@ -98,7 +120,7 @@ bool page(tinyxml2::XMLNode* page, std::string target) {
 
   // std::cout<<std::endl<<"======"<<std::endl;
   
-  extract_definition (definition);
+  extract_definition (definition, word);
 
   return true;
 }
