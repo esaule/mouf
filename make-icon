@@ -1,0 +1,13 @@
+#!/bin/sh
+
+mkdir -p mouf/res/drawable-ldpi
+inkscape mouf-icon.svg --export-png=mouf/res/drawable-ldpi/mouficon.png --export-area-drawing -w 36 -h 36
+
+mkdir -p mouf/res/drawable
+inkscape mouf-icon.svg --export-png=mouf/res/drawable/mouficon.png --export-area-drawing -w 48 -h 48
+
+mkdir -p mouf/res/drawable-hdpi
+inkscape mouf-icon.svg --export-png=mouf/res/drawable-hdpi/mouficon.png --export-area-drawing -w 72 -h 72
+
+mkdir -p mouf/res/drawable-xhdpi
+inkscape mouf-icon.svg --export-png=mouf/res/drawable-xhdpi/mouficon.png --export-area-drawing -w 96 -h 96

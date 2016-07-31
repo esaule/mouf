@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Planet Protecter Lite</string>
+    <string name="main_menu_play">Play</string>
+    <string name="main_menu_credits">Credits</string>
+    <string name="main_menu_highscore">High Score: </string>
+    <string name="main_menu_title">@string/app_name</string>
+    <string name="game_score">Score: </string>
+    <string name="game_gameover">Game Over!</string>
+    <string name="credits_text">Programming: Erik Saule. Graphics: Erik Saule. (Some graphics are from opengameart by Atrus, Scrittl.) Libs: cairo ( https://github.com/anoek/android-cairo ), png ( https://github.com/julienr/libpng-android )</string>
+</resources>
