@@ -143,13 +143,19 @@ public:
 
   ///cairo is scaled to (sizeX,sizeY) before render is called and area is cliped.
   virtual void render(cairo_t* cr) = 0;
-  virtual ~CairoGraphicController(){};
+  virtual ~CairoGraphicController(){
+#ifdef GTK
+    gtk_should_paint = true;
+#endif    
+  };
   CairoGraphicController(){sizeX=sizeY=0;}
 
   virtual bool quit() const = 0;
 
   ///these functions are used to integrate in GTK
 #ifdef GTK
+  bool gtk_should_paint;
+
   static gboolean
   key_press (GtkWidget *, GdkEventKey *event, gpointer )
   {
@@ -161,6 +167,15 @@ public:
        return TRUE;
 
   }
+
+  static gboolean visibility_notify (GtkWidget * , GdkEventVisibility *event, gpointer data)
+  {
+    CairoGraphicController* g = (CairoGraphicController*)data;
+    
+    g->gtk_should_paint = (event->state != GDK_VISIBILITY_FULLY_OBSCURED);
+    return FALSE;
+  }
+
 
   static gboolean
   button_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -212,6 +227,8 @@ public:
   {
     CairoGraphicController* g = (CairoGraphicController*)data;
 
+    if (! g->gtk_should_paint) return TRUE;
+    
     cairo_t *cr;
     /* get a cairo_t */  
 

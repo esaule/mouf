@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
+#include <unistd.h>
 #include "timequeue.hpp"
+#include "log.hpp"
 
 class Ding : public TimeEvent
 {

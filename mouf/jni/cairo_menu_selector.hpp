@@ -35,6 +35,8 @@
 #include "exception.hpp"
 #endif
 
+#include "config.h"
+
 #define COPYRIGHTTEXT "(c) Erik Saule, 2012. " VERSION_NUMBER "."
 
 class CairoMenuSelector: public CairoGraphicController

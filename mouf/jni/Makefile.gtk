@@ -1,0 +1,41 @@
+include Makefile.local
+
+GTK_INCLUDE = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags cairo`
+GTK_LIB = `pkg-config --libs gtk+-2.0``pkg-config --libs cairo`
+
+VERSION_NUMBER=\"`git describe --tags``if git diff --exit-code > /dev/null ; then echo -n ; else echo \-dirty; fi`\"
+
+CC = gcc -Wall
+CFLAGS += $(GTK_INCLUDE) -I `pwd`
+CXXFLAGS += -g -O0
+#CXXFLAGS += -O3
+CXXFLAGS += $(GTK_INCLUDE) -DVERSION_NUMBER=$(VERSION_NUMBER) -std=gnu++0x  -W -Wextra -Wall  -I `pwd`
+LDFLAGS += $(GTK_LIB) $(X11_LIB)
+#LDFLAGS += -g
+
+#ENGINEOBJS= engine/map.o engine/character.o engine/gamestate.o engine/controller.o engine/controller_action.o engine/controller_io.o engine/event.o engine/Action.o
+
+#OBJS = util/string_convert.o Animation.o tact_gtk_cairo.o tact_map_editor_mode.o CharacterMode.o ViewMode.o SpriteCollection_cairo.o log.o TileSet.o $(ENGINEOBJS)
+
+OBJS=log.o SpriteCollection_cairo.o  config.o graphics.o StringFinder.o type.o debug.o input_android.o  tact_gtk_cairo.o UnixStringFinder.o
+
+
+CC=g++
+LD=g++
+
+all: tact_gtk_cairo
+
+tact_gtk_cairo: $(OBJS)
+	$(LD) $(GTK_LIB) $(X11_LIB) $(OBJS) -o tact_gtk_cairo $(LDFLAGS)
+
+clean:
+	-rm *.o $(OBJS) *~
+
+doc:
+	doxygen Doxyfile
+
+
+depend:
+	makedepend -f Makefile.gtk *.cpp *.hpp -Y engine/*.hpp engine/*.cpp util/*.hpp util/*.cpp
+
+# DO NOT DELETE
