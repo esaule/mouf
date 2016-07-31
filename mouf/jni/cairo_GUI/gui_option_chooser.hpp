@@ -172,7 +172,9 @@ public:
 	return;
       }
     }
+#ifndef NOEXCEPTION
     throw NoSuchOptionException (s);
+#endif
   }
 
 
@@ -193,7 +195,9 @@ public:
 	return it->second.highlight;
       }
     }
+#ifndef NOEXCEPTION
     throw NoSuchOptionException (s);
+#endif
   }
 
   ///tells whether an option is there.

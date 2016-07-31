@@ -5,16 +5,17 @@
 #ifndef PIXMAN_ELF_FIX_H
 #define PIXMAN_ELF_FIX_H
 
-typedef struct {
-    int a_type;
+/* No longer necessary with modern android NDK*/
+/* typedef struct { */
+/*     int a_type; */
 
-    union {
-        long int  a_val;
-        void     *a_ptr;
-        void    (*a_fcn)(void);
-    } a_un;
+/*     union { */
+/*         long int  a_val; */
+/*         void     *a_ptr; */
+/*         void    (*a_fcn)(void); */
+/*     } a_un; */
 
-} Elf32_auxv_t;
+/* } Elf32_auxv_t; */
 
 #endif /* PIXMAN_ELF_FIX_H */
 

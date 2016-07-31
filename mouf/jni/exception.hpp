@@ -5,6 +5,9 @@
 #include "util/stacktrace.hpp"
 #endif
 
+
+#include <vector>
+
 #include "log.hpp"
 
 class BaseException {
