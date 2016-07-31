@@ -64,11 +64,13 @@ public:
     mf->addOption("F");
 
     mf->setInterHeight(0);
-    mf->setInterWidth(.49);
+    mf->setInterWidth(.51);
     mf->setOffsetX(0);
     mf->setOffsetY(0);
     mf->setOptionHeight(1.0);
-    mf->setOptionWidth(.48);
+    mf->setOptionWidth(.49);
+
+    mf->setFontSize(.75);
 
     metachoice = new GuiOptionChooser (*this);
     gl.addObject(metachoice);
@@ -79,12 +81,13 @@ public:
     metachoice->addOption("Back");
 
     metachoice->setInterHeight(0);
-    metachoice->setInterWidth(.49);
+    metachoice->setInterWidth(.51);
     metachoice->setOffsetX(0);
     metachoice->setOffsetY(0);
     metachoice->setOptionHeight(1.0);
-    metachoice->setOptionWidth(.48);
+    metachoice->setOptionWidth(.49);
 
+    metachoice->setFontSize(.5);
   }
 
   virtual void say(const GuiOptionChooser* , Verb verb) {
@@ -112,21 +115,21 @@ public:
   {
     CairoGraphicController::setSizeY(sy);
 
-    title->setSizeY (sy/4);
+    title->setSizeY (.25*sy);
     gl.placeObjectY(title, 0);
-    gl.sizeObjectY(title, sy/4);
+    gl.sizeObjectY(title, .25*sy);
 
-    definition->setSizeY (sy/4);
-    gl.placeObjectY(definition, sy/4);
-    gl.sizeObjectY(definition, sy/4);
+    definition->setSizeY (.375*sy);
+    gl.placeObjectY(definition, .25*sy);
+    gl.sizeObjectY(definition, .375*sy);
 
-    mf->setSizeY (sy/4);
-    gl.placeObjectY(mf, 2*sy/4);
-    gl.sizeObjectY(mf, sy/4);
+    mf->setSizeY (.25*sy);
+    gl.placeObjectY(mf, .625*sy);
+    gl.sizeObjectY(mf, .25*sy);
 
-    metachoice->setSizeY (sy/4);
-    gl.placeObjectY(metachoice, 3*sy/4);
-    gl.sizeObjectY(metachoice, sy/4);
+    metachoice->setSizeY (.125*sy);
+    gl.placeObjectY(metachoice, .875*sy);
+    gl.sizeObjectY(metachoice, .125*sy);
     
   }
 
