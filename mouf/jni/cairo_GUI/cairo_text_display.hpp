@@ -44,11 +44,6 @@ class CairoTextDisplay : public CairoGraphicController
 public:
   CairoTextDisplay(std::string text_to_display)
   {
-    s = text_to_display;
-    const char* te = s.c_str();
-    sizetext = strlen(te);
-    text = new char[sizetext+1];
-    memcpy(text, te, sizeof(char)*(sizetext+1));
     quitting = false;
 
     setFontSize(.07);
@@ -57,25 +52,38 @@ public:
 
     textOffsetX = .05;
     textOffsetY = .05;
-
-    need_to_cut = true;
     
     bgcolor = cairo_pattern_create_rgb(1,1,1);
     fgcolor = cairo_pattern_create_rgb(0,0,0);
+
+    textFontSizeRel = .1;
+    
+    setText(text_to_display);
   }
 
+  void setText(std::string text_to_display) {
+    s = text_to_display;
+    const char* te = s.c_str();
+    sizetext = strlen(te);
+    text = new char[sizetext+1];
+    memcpy(text, te, sizeof(char)*(sizetext+1));
+
+    need_to_cut = true;
+
+  }
+  
   void setFontSize(float f){
     textFontSizeRel = f;
     textFontSize = textFontSizeRel*getSizeY();
   }
 
-  virtual void clickat(int x, int y)
+  virtual void clickat(int , int )
   {
     quitting = true;
   }
 
-  virtual void clickmove(int x, int y){}
-  virtual void clickrelease(int x, int y){}
+  virtual void clickmove(int , int ){}
+  virtual void clickrelease(int , int ){}
 
   virtual bool quit() const
   {
@@ -111,19 +119,21 @@ public:
   {
     resetCut();
     
-
+    
     char* t = text;
     t += maxsize;
 
     while (t < text+sizetext)
       {
-	while (*t != ' ' && *t != '\0')
+	while (*t != ' ' && *t != '\0') {
 	  --t;
+	  if (t < text)
+	    return;
+	}
 	*t = '\0';
 	t += maxsize;
       }
   }
-
 
   virtual void render(cairo_t* cr)
   {
@@ -177,11 +187,11 @@ public:
   }
   
   //there is nothing to serialize.
-  virtual void deserialize(const char* c)
+  virtual void deserialize(const char* )
   {
   }
 
-  virtual void serialize(char* c) const
+  virtual void serialize(char* ) const
   {
   }
 

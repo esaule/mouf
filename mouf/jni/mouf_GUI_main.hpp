@@ -24,6 +24,7 @@
 #include "cairo_GUI/gui_interface.hpp"
 #include "cairo_GUI/gui_option_chooser.hpp"
 #include "smart_ptr.hpp"
+#include "dictionary.hpp"
 
 class MoufGUI : public CairoGraphicController,
 		public VerbListener
@@ -38,9 +39,26 @@ class MoufGUI : public CairoGraphicController,
 
   util::smart_ptr<GuiOptionChooser> metachoice;
 
+  std::vector<dict_entry> dict;
+
+  dict_entry current_entry;
+  
+  int entry_index;
+
+  void nextword() {
+    entry_index = (entry_index+1)%dict.size();
+    
+    current_entry = dict[entry_index];
+    title->setText (current_entry.word);
+    definition->setText (current_entry.definition);
+
+    mf->setHighlight("M", false);
+    mf->setHighlight("F", false);
+  }
   
 public:
   MoufGUI() {
+    entry_index = 0;
     quitting = false;
 
 
@@ -49,7 +67,8 @@ public:
     gl.showObject(title, true);
     gl.allowInput(title, false);
     //title->setFontSize(2.);
-    
+    title->setFontSize(.4);
+
     definition = new CairoTextDisplay ("definition");
     gl.addObject(definition);
     gl.showObject(definition, true);
@@ -88,10 +107,26 @@ public:
     metachoice->setOptionWidth(.49);
 
     metachoice->setFontSize(.5);
+
+    dict = load_dictionary("");
+    nextword();
   }
 
   virtual void say(const GuiOptionChooser* , Verb verb) {
     std::cout<<"Say: "<<verb<<std::endl;
+
+    if (verb.compare("M") == 0 || verb.compare("F") == 0) {
+      if (current_entry.genre == 'f')
+	mf->setHighlight("F", true);
+      if (current_entry.genre == 'm')
+	mf->setHighlight("M", true);
+    }
+
+    if (verb.compare("Next") == 0)
+      nextword();
+
+    if (verb.compare("Back") == 0)
+      quitting = true;
   }
   
   
@@ -164,11 +199,11 @@ public:
   }
   
   //there is nothing to serialize.
-  virtual void deserialize(const char* c)
+  virtual void deserialize(const char* )
   {
   }
 
-  virtual void serialize(char* c) const
+  virtual void serialize(char* ) const
   {
   }
 
