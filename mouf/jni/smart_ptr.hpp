@@ -3,122 +3,174 @@
 
 #include <assert.h>
 #include <iostream>
-#include "log.hpp"
 
-///implements ref counting. Use as a pointer.
-template <typename T, bool debug=false>
-class smart_ptr
-{
-  int* counter;
-  T* obj;
+namespace util {
   
-
-private:
-
-  void release()
+  ///implements ref counting. Use as a pointer.
+  template <typename T, bool debug=false>
+  class smart_ptr
   {
-    if (counter != NULL)
-      {
-	if (debug)
-	  Log::logerr<<"releasing. counter was "<<*counter<<Log::endl;
-	assert (*counter > 0);
-	(*counter)--;
-	if (debug)
-	  Log::logerr<<"counter is now "<<*counter<<Log::endl;
-	if (*counter == 0)
-	  {
-	    if (debug)
-	      Log::logerr<<"freeing"<<Log::endl;
-	    delete obj;
-	    delete counter;
-	  }
-	obj = NULL;
-	counter = NULL;
-      }
-  }
-public:
-  smart_ptr& operator= (const smart_ptr& p)
-  {
-    if (debug)
-      Log::logerr<<"assign"<<Log::endl;
-    release();
+    int* counter;
+    T* obj;
 
-    counter = p.counter;
-    obj = p.obj;
-    assert (counter != NULL);
-    (*counter) ++;
-  }
 
-  smart_ptr()
-  {
-    if (debug)
-      Log::logerr<<"default cstr"<<Log::endl;
-    counter=NULL;
-    obj=NULL;
-  }
+  private:
 
-  smart_ptr(const T& o)
-  {
-    if (debug)
-      Log::logerr<<"ref cstr"<<Log::endl;
-
-    counter = new int(1);
-    obj = new T (o);
-  }
-
-  smart_ptr(T* o)
-  {
-    if (debug)
-      Log::logerr<<"ref cstr"<<Log::endl;
-
-    counter = new int(1);
-    obj = o;
-  }
-
-  smart_ptr(const smart_ptr& p)
-  {
-    if (debug)
-      Log::logerr<<"copy cstr"<<Log::endl;
+    void release()
+    {
+      if (counter != NULL)
+	{
+	  if (debug)
+	    std::cerr<<"releasing. counter was "<<*counter<<std::endl;
+	  assert (*counter > 0);
+	  (*counter)--;
+	  if (debug)
+	    std::cerr<<"counter is now "<<*counter<<std::endl;
+	  if (*counter == 0)
+	    {
+	      if (debug)
+		std::cerr<<"freeing"<<std::endl;
+	      if (obj) //it could be a smart_ptr to NULL
+		delete obj;
+	      delete counter;
+	    }
+	  obj = NULL;
+	  counter = NULL;
+	}
+    }
+  public:
     
-    counter = p.counter;
-    obj = p.obj;
-    if (counter != NULL)
-      {
+    smart_ptr(T* o, int* c)
+    {
+      counter = c;
+      obj = o;
+      (*counter)++;
+    }
+
+    smart_ptr& operator= (const smart_ptr& p)
+    {
+      if (&p == this)
+	return *this;
+
+      if (debug)
+	std::cerr<<"assign"<<std::endl;
+      release();
+
+      counter = p.counter;
+      obj = p.obj;
+      //      assert (((counter == NULL) && (obj == NULL)) || ((counter != NULL) && (obj != NULL)));
+      if (counter)
 	(*counter) ++;
-	if (debug)
-	  Log::logerr<<"counter is now "<<*counter<<Log::endl;
-      }
-    else
-      {
-	if (debug)
-	  Log::logerr<<"copying a NULL smart_ptr"<<Log::endl;
-      }
-  }
-  
-  T& operator* () const
-  {
-    assert (obj != NULL);
-    return *obj;
-  }
 
-  T* operator-> () const
-  {
-    assert (obj != NULL);
-    return obj;
-  }
-
-  operator bool() const
-  {
-    return (obj != NULL);
-  }
-
-  ~smart_ptr()
-  {
-    if (debug)
-      Log::logerr<<"dstr"<<Log::endl;
+      return *this;
+    }
     
-    release();
-  }
-};
+    template <class TT>
+    operator smart_ptr<TT> () {
+      smart_ptr<TT> np (obj, counter);
+      return np;
+    }
+
+    smart_ptr()
+    {
+      if (debug)
+	std::cerr<<"default cstr"<<std::endl;
+      counter=NULL;
+      obj=NULL;
+    }
+
+    smart_ptr(const T& o)
+    {
+      if (debug)
+	std::cerr<<"ref cstr"<<std::endl;
+
+      counter = new int(1);
+      obj = new T (o);
+    }
+
+    smart_ptr(T* o)
+    {
+      if (debug)
+	std::cerr<<"ref cstr"<<std::endl;
+
+      counter = new int(1);
+      obj = o;
+    }
+
+    smart_ptr(const smart_ptr& p)
+    {
+      if (debug)
+	std::cerr<<"copy cstr"<<std::endl;
+    
+      counter = p.counter;
+      obj = p.obj;
+      if (counter != NULL)
+	{
+	  (*counter) ++;
+	  if (debug)
+	    std::cerr<<"counter is now "<<*counter<<std::endl;
+	}
+      else
+	{
+	  if (debug)
+	    std::cerr<<"copying a NULL smart_ptr"<<std::endl;
+	}
+    }
+  
+    T& operator* () const
+    {
+      assert (obj != NULL);
+      return *obj;
+    }
+
+    T* operator-> () const
+    {
+      assert (obj != NULL);
+      return obj;
+    }
+
+    operator bool() const
+    {
+      return (obj != NULL);
+    }
+
+    ~smart_ptr()
+    {
+      if (debug)
+	std::cerr<<"dstr"<<std::endl;
+    
+      release();
+    }
+
+    bool operator== (const smart_ptr & p) const{
+      return obj == p.obj;
+    }
+
+    bool operator< (const smart_ptr& p) const{
+      return obj < p.obj;
+    }
+
+    bool operator<= (const smart_ptr& p) const{
+      return this->operator<(p) || this->operator==(p);
+    }
+    
+    bool operator> (const smart_ptr& p) const{
+      return !this->operator<=(p);
+    }
+
+    bool operator>= (const smart_ptr& p) const{
+      return !this->operator<(p);
+    }
+
+    explicit operator T*() {
+      return this->obj;
+    }
+  };
+}
+
+template<typename T>
+bool operator== (const util::smart_ptr<T>& a, const util::smart_ptr<T>& b) {
+  return a->operator==(b);
+}
 
 #endif

@@ -1,7 +1,10 @@
 #ifndef EXCEPT_HPP
 #define EXCEPT_HPP
 
-//#include "util/stacktrace.hpp"
+#ifndef ANDROID
+#include "util/stacktrace.hpp"
+#endif
+
 #include "log.hpp"
 
 class BaseException {
@@ -12,7 +15,9 @@ public:
   BaseException(const std::string& type = "BaseException")
     :type(type)
   {
-    //  stack = get_backtrace();
+#ifndef ANDROID
+    stack = get_backtrace();
+#endif
   }   
   void print_backtrace() {
     for (auto l : stack)

@@ -36,6 +36,84 @@ doc:
 
 
 depend:
-	makedepend -f Makefile.gtk *.cpp *.hpp -Y engine/*.hpp engine/*.cpp util/*.hpp util/*.cpp
+	makedepend -f Makefile.gtk *.cpp *.hpp -Y cairo_GUI/*.cpp cairo_GUI/*.hpp util/*.hpp util/*.cpp
 
 # DO NOT DELETE
+
+Display_sdl_opengl.o: Display_sdl_opengl.hpp SpriteCollection.hpp log.hpp
+Display_sdl_opengl.o: graphics.hpp type.hpp debug.h Color.hpp Display.hpp
+Display_sdl_opengl.o: external/stb_truetype.h
+SpriteCollection_cairo.o: SpriteCollection.hpp log.hpp
+StringFinder.o: StringFinder.hpp
+UnixStringFinder.o: UnixStringFinder.hpp StringFinder.hpp
+asset_ifstream.o: asset_ifstream.hpp log.hpp
+debug.o: debug.h type.hpp graphics.hpp log.hpp SpriteCollection.hpp Color.hpp
+debug.o: Display.hpp
+graphics.o: log.hpp graphics.hpp type.hpp SpriteCollection.hpp debug.h
+graphics.o: Color.hpp Display.hpp
+input_android.o: input_android.hpp type.hpp
+log.o: log.hpp
+main.o: log.hpp graphics.hpp type.hpp SpriteCollection.hpp debug.h Color.hpp
+main.o: Display.hpp input.hpp timequeue.hpp timeevent.hpp
+shmup.o: cairo/src/cairo.h cairo/src/cairo-version.h
+shmup.o: cairo/src/cairo-deprecated.h config.h cairo_graphic_controller.hpp
+shmup.o: serializable.hpp exception.hpp util/stacktrace.hpp log.hpp
+shmup.o: cairo_menu_selector.hpp SpriteCollection_cairo.hpp timestamp.hpp
+shmup.o: cairo_GUI/cairo_text_display.hpp StringFinder.hpp mouf_GUI_main.hpp
+shmup.o: cairo_GUI/GuiLayout.hpp asset_ifstream.hpp AndroidStringFinder.hpp
+shmup.o: myjni.hpp
+tact_gtk_cairo.o: UnixStringFinder.hpp StringFinder.hpp exception.hpp
+tact_gtk_cairo.o: util/stacktrace.hpp log.hpp cairo_menu_selector.hpp
+tact_gtk_cairo.o: SpriteCollection_cairo.hpp timestamp.hpp
+tact_gtk_cairo.o: cairo_GUI/cairo_text_display.hpp
+tact_gtk_cairo.o: cairo_graphic_controller.hpp serializable.hpp
+tact_gtk_cairo.o: mouf_GUI_main.hpp cairo_GUI/GuiLayout.hpp config.h
+timequeue.o: timequeue.hpp debug.h type.hpp log.hpp
+type.o: type.hpp
+AndroidStringFinder.o: myjni.hpp log.hpp StringFinder.hpp
+Color.o: type.hpp log.hpp
+Display.o: SpriteCollection.hpp log.hpp graphics.hpp type.hpp debug.h
+Display.o: Color.hpp Display.hpp StringFinder.hpp
+Display_sdl_cairo.o: SpriteCollection.hpp log.hpp graphics.hpp type.hpp
+Display_sdl_cairo.o: debug.h Color.hpp Display.hpp StringFinder.hpp
+Display_sdl_opengl.o: SpriteCollection.hpp log.hpp graphics.hpp type.hpp
+Display_sdl_opengl.o: debug.h Color.hpp Display.hpp
+SpriteCollection-opengl.o: smart_ptr.hpp log.hpp
+SpriteCollection.o: log.hpp
+SpriteCollection_cairo.o: log.hpp
+UnixStringFinder.o: StringFinder.hpp
+asset_ifstream.o: log.hpp
+cairo_graphic_controller.o: serializable.hpp exception.hpp
+cairo_graphic_controller.o: util/stacktrace.hpp log.hpp
+cairo_menu_selector.o: SpriteCollection_cairo.hpp log.hpp timestamp.hpp
+cairo_menu_selector.o: cairo_GUI/cairo_text_display.hpp
+cairo_menu_selector.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_menu_selector.o: exception.hpp util/stacktrace.hpp StringFinder.hpp
+cairo_menu_selector.o: mouf_GUI_main.hpp cairo_GUI/GuiLayout.hpp config.h
+exception.o: util/stacktrace.hpp log.hpp
+graphics.o: log.hpp type.hpp SpriteCollection.hpp debug.h Color.hpp
+graphics.o: Display.hpp
+input.o: type.hpp
+input_android.o: type.hpp
+mouf_GUI_main.o: cairo_graphic_controller.hpp serializable.hpp exception.hpp
+mouf_GUI_main.o: util/stacktrace.hpp log.hpp cairo_GUI/GuiLayout.hpp
+myjni.o: log.hpp
+serializable.o: exception.hpp util/stacktrace.hpp log.hpp
+smart_ptr.o: log.hpp
+timequeue.o: debug.h type.hpp
+tool.o: type.hpp
+cairo_GUI/GuiLayout.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_GUI/GuiLayout.o: exception.hpp util/stacktrace.hpp log.hpp
+cairo_GUI/Keyboard.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_GUI/Keyboard.o: exception.hpp util/stacktrace.hpp log.hpp
+cairo_GUI/Keyboard.o: cairo_GUI/gui_option_chooser.hpp
+cairo_GUI/Keyboard.o: SpriteCollection_cairo.hpp cairo_GUI/gui_interface.hpp
+cairo_GUI/Keyboard.o: cairo_GUI/cairo_text_display.hpp
+cairo_GUI/cairo_template.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_GUI/cairo_template.o: exception.hpp util/stacktrace.hpp log.hpp
+cairo_GUI/cairo_text_display.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_GUI/cairo_text_display.o: exception.hpp util/stacktrace.hpp log.hpp
+cairo_GUI/gui_option_chooser.o: cairo_graphic_controller.hpp serializable.hpp
+cairo_GUI/gui_option_chooser.o: exception.hpp util/stacktrace.hpp log.hpp
+cairo_GUI/gui_option_chooser.o: SpriteCollection_cairo.hpp
+cairo_GUI/gui_option_chooser.o: cairo_GUI/gui_interface.hpp

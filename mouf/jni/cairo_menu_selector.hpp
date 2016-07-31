@@ -28,8 +28,9 @@
 #include "log.hpp"
 #include "timestamp.hpp"
 //#include "ShmupCairoWrapper.hpp"
-#include "cairo_text_display.hpp"
+#include "cairo_GUI/cairo_text_display.hpp"
 #include "StringFinder.hpp"
+#include "mouf_GUI_main.hpp"
 
 #ifndef NOEXCEPTION
 #include "exception.hpp"
@@ -136,7 +137,7 @@ public:
     currentisgame = false;
     highscore = 0;
     restoreHighScore();
-    nboption = 1;
+    nboption = 2;
     interoption_height = .02;
     optionheight = .08;
     optionwidth = .7;
@@ -169,9 +170,9 @@ public:
 
     tags = new tagtype[nboption];
 
-    tags[0] = StringFinder::singleton->find("main_menu_credits");
-    //tags[0] = StringFinder::singleton->find("main_menu_play");
-    //tags[1] = StringFinder::singleton->find("main_menu_credits");
+    
+    tags[0] = StringFinder::singleton->find("main_menu_play");
+    tags[1] = StringFinder::singleton->find("main_menu_credits");
     // tags[2] = "Medium";
     // tags[3] = "Expert";
     // tags[4] = "Help";
@@ -193,6 +194,12 @@ public:
   void clickon(int opt)
   {
     if (opt == 0)
+      {
+	currentobj = GAME;
+	current = new MoufGUI();
+      }
+    
+    if (opt == 1)
       {
 	currentobj = HELP;
 	current = new CairoTextDisplay(StringFinder::singleton->find("credits_text"));
