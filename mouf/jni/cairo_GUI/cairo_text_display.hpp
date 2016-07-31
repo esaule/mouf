@@ -31,7 +31,7 @@ class CairoTextDisplay : public CairoGraphicController
   char* text;
   int sizetext;
 
-  float width_to_height_ratio;
+  float font_width_to_height_ratio; ///probably font dependent.
 
   bool need_to_cut;
 
@@ -39,15 +39,14 @@ class CairoTextDisplay : public CairoGraphicController
   cairo_pattern_t * fgcolor;
 
   std::string s;
-  
-
+    
 public:
   CairoTextDisplay(std::string text_to_display)
   {
     quitting = false;
 
     setFontSize(.07);
-    width_to_height_ratio = .7;
+    font_width_to_height_ratio = .5;
 
 
     textOffsetX = .05;
@@ -121,16 +120,19 @@ public:
     
     
     char* t = text;
+    char *oldt = t;
     t += maxsize;
-
+    
+    
     while (t < text+sizetext)
       {
 	while (*t != ' ' && *t != '\0') {
 	  --t;
-	  if (t < text)
-	    return;
 	}
+	if (t <= oldt)
+	    return;
 	*t = '\0';
+	oldt = t;
 	t += maxsize;
       }
   }
@@ -139,7 +141,12 @@ public:
   {
     if (need_to_cut)
       {
-	reCutAt((1-2.*textOffsetX)/(textFontSizeRel*width_to_height_ratio));
+	float lettersizey = textFontSize;
+	float lettersizex = font_width_to_height_ratio*lettersizey;
+	float availablesize = (1-2.*textOffsetX)*getSizeX();
+	float cutsize = availablesize/lettersizex;
+		
+	reCutAt(cutsize);
 	need_to_cut = false;
       }
 

@@ -73,7 +73,8 @@ public:
     gl.addObject(definition);
     gl.showObject(definition, true);
     gl.allowInput(definition, false);
-
+    definition->setFontSize(.111);
+    
     mf = new GuiOptionChooser (*this);
     gl.addObject(mf);
     gl.showObject(mf, true);
