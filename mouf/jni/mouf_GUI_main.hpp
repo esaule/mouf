@@ -46,7 +46,8 @@ class MoufGUI : public CairoGraphicController,
   int entry_index;
 
   void nextword() {
-    entry_index = (entry_index+1)%dict.size();
+    entry_index = rand()%dict.size();
+    //    entry_index = (entry_index+1)%dict.size();
     
     current_entry = dict[entry_index];
     title->setText (current_entry.word);
@@ -111,8 +112,8 @@ public:
 
     dict = load_dictionary("dictionary");
 
-    //srand(time(NULL));
-    //entry_index = rand()%dict.size();
+    srand(time(NULL));
+    entry_index = rand()%dict.size();
     nextword();
   }
 
