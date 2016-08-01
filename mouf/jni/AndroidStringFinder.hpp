@@ -42,7 +42,7 @@ class AndroidStringFinder : public StringFinder{
     jmethodID findClass = jni->GetMethodID(classLoader, "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;");
     JNI_ASSERT(jni, findClass);
   
-    jstring strClassName = jni->NewStringUTF("com.godrik.shmup.R$string");
+    jstring strClassName = jni->NewStringUTF("com.godrik.MouF.R$string");
     JNI_ASSERT(jni, strClassName);
   
     jclass classIWant = (jclass)jni->CallObjectMethod(cls, findClass, strClassName);   
