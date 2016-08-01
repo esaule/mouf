@@ -17,7 +17,7 @@ LDFLAGS += $(GTK_LIB) $(X11_LIB)
 
 #OBJS = util/string_convert.o Animation.o tact_gtk_cairo.o tact_map_editor_mode.o CharacterMode.o ViewMode.o SpriteCollection_cairo.o log.o TileSet.o $(ENGINEOBJS)
 
-OBJS=log.o SpriteCollection_cairo.o  config.o graphics.o StringFinder.o type.o debug.o input_android.o  tact_gtk_cairo.o UnixStringFinder.o dictionary.o
+OBJS=log.o SpriteCollection_cairo.o  config.o graphics.o StringFinder.o type.o debug.o input_android.o  tact_gtk_cairo.o UnixStringFinder.o dictionary.o fontmanager.o
 
 
 CC=g++

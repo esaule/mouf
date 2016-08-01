@@ -22,6 +22,8 @@
 #include <string>
 #include "log.hpp"
 
+#include "fontmanager.hpp"
+
 class CairoGraphicController : public Serializable
 {
 protected:
@@ -222,6 +224,8 @@ public:
   }
 
 
+  
+  
   static gboolean
   expose (GtkWidget *, GdkEventExpose *event, gpointer data)
   {
@@ -233,6 +237,10 @@ public:
     /* get a cairo_t */  
 
     cr = gdk_cairo_create (imWind->window);
+
+    //set international font
+    FontManager* fm = FontManager::singleton;
+    cairo_set_font_face(cr, fm->getFont(""));
     
     /* set a clip region for the expose event */
     cairo_rectangle (cr,

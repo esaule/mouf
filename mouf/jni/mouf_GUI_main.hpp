@@ -109,7 +109,7 @@ public:
 
     metachoice->setFontSize(.5);
 
-    dict = load_dictionary("");
+    dict = load_dictionary("dictionary");
     nextword();
   }
 
