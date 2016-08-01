@@ -27,7 +27,6 @@
 #include "SpriteCollection_cairo.hpp"
 #include "log.hpp"
 #include "timestamp.hpp"
-//#include "ShmupCairoWrapper.hpp"
 #include "cairo_GUI/cairo_text_display.hpp"
 #include "StringFinder.hpp"
 #include "mouf_GUI_main.hpp"
@@ -38,11 +37,10 @@
 
 #include "config.h"
 
-#define COPYRIGHTTEXT "(c) Erik Saule, 2012. " VERSION_NUMBER "."
+#define COPYRIGHTTEXT "(c) Erik Saule, 2016. " VERSION_NUMBER "."
 
 class CairoMenuSelector: public CairoGraphicController
 {
-  //  typedef const char * tagtype;
   typedef std::string tagtype;
 
   typedef enum
@@ -74,8 +72,6 @@ class CairoMenuSelector: public CairoGraphicController
 
   savetypes currentobj;
 
-
-  int highscore;
   bool currentisgame;
 
   bool checkcurrent()
@@ -86,9 +82,6 @@ class CairoMenuSelector: public CairoGraphicController
       {
 	if (currentisgame) {
 	  //ShmupCairoWrapper* e = (ShmupCairoWrapper*) current;
-	  //highscore = std::max(highscore, e->getScore());
-	  saveHighScore();
-	  reset_highscore_line();
 	  currentisgame = false;
 	}
 	delete current;
@@ -99,44 +92,13 @@ class CairoMenuSelector: public CairoGraphicController
     return (current != NULL);
   }
 
-  std::string highscore_filename() const {return configurationroot+"/highscore";}
-
-  void restoreHighScore() {
-    std::ifstream in (highscore_filename().c_str());
-    if (in.is_open()) {
-      int hs;
-      in >> hs;
-      if (in) {
-	highscore = hs;
-      }
-    }
-    reset_highscore_line();
-  }
-
-  void reset_highscore_line()
-  {
-    std::stringstream ss;
-    ss<<StringFinder::singleton->find("main_menu_highscore")<<highscore;
-    highscore_line.setText(ss.str());
-  }
-  
-  void saveHighScore() {
-    std::ofstream out (highscore_filename().c_str());
-    if (out.is_open()) {
-      out << highscore;
-    }    
-  }
-
   cairo_text_line copyright;
   cairo_text_line title;
-  cairo_text_line highscore_line;
 public:
   CairoMenuSelector()
-    :current(NULL), copyright(this), title(this), highscore_line(this)
+    :current(NULL), copyright(this), title(this)
   {
     currentisgame = false;
-    highscore = 0;
-    restoreHighScore();
     nboption = 2;
     interoption_height = .02;
     optionheight = .08;
@@ -159,10 +121,6 @@ public:
     copyright.setOffsetY(.9);
     copyright.setFontSize(.015);
     copyright.setText(COPYRIGHTTEXT);
-
-    highscore_line.setOffsetX (.35);
-    highscore_line.setOffsetY (.85);
-    highscore_line.setFontSize (.035);
 
     bgcolor = cairo_pattern_create_rgb(1,1,1);
     fgcolor = cairo_pattern_create_rgb(0,0,0);
@@ -293,8 +251,6 @@ public:
 
     copyright.render(cr);
 
-    highscore_line.render(cr);
-
 
     if (debug)
       Log::log<<"end render "<<util::timestamp()<<Log::endl;
@@ -315,45 +271,17 @@ public:
 
   virtual bool quit() const {return false;}
 
-  virtual void deserialize(const char* c)
+  virtual void deserialize(const char* )
   {
-    currentobj = *((savetypes*) c);
-    c += sizeof(currentobj);
-    highscore = *((int*) c);
-    c += sizeof(highscore);
-    reset_highscore_line();
-
-    switch (currentobj)
-      {
-      case NONE:
-	break;
-      default:
-#ifndef NOEXCEPTION
-	throw DeserializeException();
-#endif
-	currentobj = NONE;
-	break;
-      }
   }
 
-  virtual void serialize(char* c) const
+  virtual void serialize(char* ) const
   {
-    *((savetypes*) c) = currentobj;
-    c += sizeof(currentobj);
-    *((int*) c) = highscore;
-    c += sizeof(highscore);
-    if (current != NULL)
-      current->serialize(c);
   }
   
   virtual size_t serializesize() const
   {
-    size_t size = sizeof(currentobj);
-    size += sizeof(highscore);
-    if (current != NULL)
-      size += current->serializesize();
-
-    return size;
+    return 0;
   }
 
 };

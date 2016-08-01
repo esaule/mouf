@@ -110,17 +110,39 @@ public:
     metachoice->setFontSize(.5);
 
     dict = load_dictionary("dictionary");
+
+    //srand(time(NULL));
+    //entry_index = rand()%dict.size();
     nextword();
   }
 
   virtual void say(const GuiOptionChooser* , Verb verb) {
     std::cout<<"Say: "<<verb<<std::endl;
 
-    if (verb.compare("M") == 0 || verb.compare("F") == 0) {
-      if (current_entry.genre == 'f')
-	mf->setHighlight("F", true);
-      if (current_entry.genre == 'm')
-	mf->setHighlight("M", true);
+    if (verb.compare("M") == 0) {
+      if (current_entry.genre == 'f') {
+	mf->setHighlightColor(1., 0., 0.);
+      }
+      if (current_entry.genre == 'm') {
+	mf->setHighlightColor(0., 1., 0.);
+      }
+
+      mf->setHighlight("F", false);
+      mf->setHighlight("M", true);
+
+    }
+
+    if ( verb.compare("F") == 0) {
+      mf->setHighlight("F", true);
+      mf->setHighlight("M", false);
+
+      if (current_entry.genre == 'f') {
+	mf->setHighlightColor(0., 1., 0.);
+      }
+      if (current_entry.genre == 'm') {
+	mf->setHighlightColor(1., 0., 0.);
+      }
+
     }
 
     if (verb.compare("Next") == 0)

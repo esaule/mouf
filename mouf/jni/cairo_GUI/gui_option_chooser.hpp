@@ -65,7 +65,11 @@ private:
   bool trigger;
 
 public:
-
+  ///color in [0;1]
+  void setHighlightColor(float r, float g, float b) {
+    highlightColor = cairo_pattern_create_rgba(r, g, b, 1.);
+  }
+  
   ///All messages are sent to v
   GuiOptionChooser(VerbListener& v)
     :vl(v)
