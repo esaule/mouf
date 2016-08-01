@@ -44,6 +44,7 @@ LIBCAIRO_SRC = \
 	       cairo/src/cairo-pattern.c                     \
 	       cairo/src/cairo-pen.c                         \
 	       cairo/src/cairo-polygon.c                     \
+               cairo/src/cairo-ft-font.c                     \
 	       cairo/src/cairo-recording-surface.c           \
 	       cairo/src/cairo-rectangle.c                   \
 	       cairo/src/cairo-rectangular-scan-converter.c  \
@@ -75,6 +76,7 @@ LIBCAIRO_CFLAGS:=                                                   \
     -DPACKAGE_BUGREPORT="\"http://github.com/anoek/android-cairo\"" \
     -DCAIRO_NO_MUTEX=1                                              \
     -DHAVE_STDINT_H                                                 \
+    -DCAIRO_HAS_FT_FONT=1                                           \
     -DCAIRO_HAS_PNG_FUNCTIONS=1
 
 
@@ -82,10 +84,10 @@ LIBCAIRO_CFLAGS:=                                                   \
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libcairo
-LOCAL_CFLAGS    := -O2 $(LIBCAIRO_CFLAGS) -Ijni/pixman/pixman -Ijni/cairo/src -Ijni/cairo-extra -Ijni/pixman-extra -Wno-missing-field-initializers -Ijni/png/
+LOCAL_CFLAGS    := -O2 $(LIBCAIRO_CFLAGS) -Ijni/pixman/pixman -Ijni/cairo/src -Ijni/cairo-extra -Ijni/pixman-extra -Wno-missing-field-initializers -Ijni/png/ -I jni/freetype/include
 LOCAL_LDFLAGS   := -lz #-L libs-pixman/armeabi -l pixman
 LOCAL_SRC_FILES := $(LIBCAIRO_SRC)
-LOCAL_STATIC_LIBRAIRIES := libpixman pibpng
+LOCAL_STATIC_LIBRAIRIES := libpixman pibpng libft2
 
 
 include $(BUILD_STATIC_LIBRARY)
