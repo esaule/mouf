@@ -48,6 +48,8 @@
 #include "StringFinder.hpp"
 #include "AndroidStringFinder.hpp"
 
+#include "fontmanager.hpp"
+
 bool app_has_focus = false;
 int  tick          = 0;
 
@@ -102,6 +104,8 @@ void android_main(struct android_app* app) {
   SpriteCollection::am = app->activity->assetManager;
   AssetIfstream::am = app->activity->assetManager;
 
+  FontManager::singleton = new FontManager();
+  
   //CassisDisplay cd2(0);
   CairoMenuSelector cms;
   cd = &cms;
@@ -309,6 +313,10 @@ static void draw_frame(ANativeWindow_Buffer *buffer, CairoGraphicController* cd)
   /* Normalize our canvas size to make our lives easier */
   //  cairo_scale(cr, buffer->width, buffer->height);
 
+  FontManager* fm = FontManager::singleton;
+  cairo_set_font_face(cr, fm->getFont(""));
+
+  
 
   cd->setSizeX (buffer->width);
   cd->setSizeY (buffer->height);

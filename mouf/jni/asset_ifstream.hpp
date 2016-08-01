@@ -57,7 +57,7 @@ public:
     if (am == NULL)
       {
 	if (debug)
-	  Log::log<<"SpriteCollection. No asset manager. aborting! "<<Log::endl;
+	  Log::log<<"AssetIfstream. No asset manager. aborting! "<<Log::endl;
 	error = true;
 	return;
       }
