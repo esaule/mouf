@@ -68,13 +68,14 @@ public:
     gl.showObject(title, true);
     gl.allowInput(title, false);
     //title->setFontSize(2.);
-    title->setFontSize(.4);
+    title->setOffsetY(.02);
+    title->setFontSize(.8);
 
     definition = new CairoTextDisplay ("definition");
     gl.addObject(definition);
     gl.showObject(definition, true);
     gl.allowInput(definition, false);
-    definition->setFontSize(.111);
+    definition->setFontSize(.08);
     
     mf = new GuiOptionChooser (*this);
     gl.addObject(mf);
@@ -174,13 +175,13 @@ public:
   {
     CairoGraphicController::setSizeY(sy);
 
-    title->setSizeY (.25*sy);
+    title->setSizeY (.15*sy);
     gl.placeObjectY(title, 0);
-    gl.sizeObjectY(title, .25*sy);
+    gl.sizeObjectY(title, .15*sy);
 
-    definition->setSizeY (.375*sy);
-    gl.placeObjectY(definition, .25*sy);
-    gl.sizeObjectY(definition, .375*sy);
+    definition->setSizeY (.475*sy);
+    gl.placeObjectY(definition, .15*sy);
+    gl.sizeObjectY(definition, .475*sy);
 
     mf->setSizeY (.25*sy);
     gl.placeObjectY(mf, .625*sy);

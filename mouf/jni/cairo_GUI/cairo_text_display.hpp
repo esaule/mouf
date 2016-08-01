@@ -76,6 +76,14 @@ public:
     textFontSize = textFontSizeRel*getSizeY();
   }
 
+  void setOffsetX(float f) {
+    textOffsetX = f;
+  }
+  
+  void setOffsetY(float f) {
+    textOffsetY = f;
+  }
+  
   virtual void clickat(int , int )
   {
     quitting = true;
