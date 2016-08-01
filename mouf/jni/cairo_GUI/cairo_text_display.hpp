@@ -46,7 +46,7 @@ public:
     quitting = false;
 
     setFontSize(.07);
-    font_width_to_height_ratio = .5;
+    font_width_to_height_ratio = .4;
 
 
     textOffsetX = .05;

@@ -5,8 +5,11 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#ifdef ANDROID
 #include <android/asset_manager.h>
 #include "asset_ifstream.hpp"
+#endif
 
 FT_Library*  library = NULL;
 FT_Face     face;      /* handle to face object */
@@ -37,8 +40,6 @@ static void init() {
 			      AAsset_getLength(as),      
 			      0,        
 			      &face );
-
-  
   
 #else  
   error = FT_New_Face( *library,
