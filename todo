@@ -1,0 +1,23 @@
+dataset:
+-creer des categories de difficultes
+-certains noms sont mal classifie M/F parceque plusieurs entree apparaissent sur la meme ligne
+-most common words from open subtitle: https://invokeit.wordpress.com/frequency-word-lists/
+-traiter les {{w|}}
+
+app:
+-ajouter un score
+-add graphics
+-add licence
+
+other:
+-regarder comment "gender confusion" marche
+
+
+DONE:
+dataset:
+-retirer les entrees du type habitant de ...
+-retirer les entree qui renvoie a d'autres mot (synonyme)
+-definition qui commence avec une espace
+
+app:
+-nom qui ne rentre pas dans le cadre
