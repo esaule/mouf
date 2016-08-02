@@ -70,6 +70,7 @@ public:
     //title->setFontSize(2.);
     title->setOffsetY(.02);
     title->setFontSize(.75);
+    title->scaleToFitOneLine(true);
 
     definition = new CairoTextDisplay ("definition");
     gl.addObject(definition);

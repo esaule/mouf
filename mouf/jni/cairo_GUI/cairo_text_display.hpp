@@ -26,6 +26,7 @@ class CairoTextDisplay : public CairoGraphicController
   bool quitting;
   float textFontSize;
   float textFontSizeRel;
+  float textFontSizePrescale;
   float textOffsetX;
   float textOffsetY;
   char* text;
@@ -39,14 +40,35 @@ class CairoTextDisplay : public CairoGraphicController
   cairo_pattern_t * fgcolor;
 
   std::string s;
-    
+
+  bool scale_to_fit;
+  
+  void rescale() {
+    //this really should use cairo_text_extents
+    textFontSizeRel = textFontSizePrescale;
+
+    if (scale_to_fit) {
+      if (getSizeX()>0 && getSizeY()>0) {
+	if (s.size()>0) {
+	  float maxcharactersize = (1-2*textOffsetX)*getSizeX() / s.size();
+	  float maxxfontsize = maxcharactersize / font_width_to_height_ratio;
+	  float maxrelfontsize = maxxfontsize / getSizeY();
+	  textFontSizeRel = std::min(textFontSizePrescale, maxrelfontsize);
+	}
+      }
+    }
+    textFontSize = textFontSizeRel*getSizeY();
+  }
+
 public:
   CairoTextDisplay(std::string text_to_display)
   {
+    scale_to_fit = false;
     quitting = false;
 
+    textFontSizeRel = .1;
     setFontSize(.07);
-    font_width_to_height_ratio = .4;
+    font_width_to_height_ratio = .48;
 
 
     textOffsetX = .05;
@@ -55,11 +77,15 @@ public:
     bgcolor = cairo_pattern_create_rgb(1,1,1);
     fgcolor = cairo_pattern_create_rgb(0,0,0);
 
-    textFontSizeRel = .1;
     
     setText(text_to_display);
   }
 
+  void scaleToFitOneLine(bool s) {
+    scale_to_fit = s;
+    rescale();
+  }
+  
   void setText(std::string text_to_display) {
     s = text_to_display;
     const char* te = s.c_str();
@@ -69,19 +95,24 @@ public:
 
     need_to_cut = true;
 
+    rescale();
   }
   
   void setFontSize(float f){
-    textFontSizeRel = f;
-    textFontSize = textFontSizeRel*getSizeY();
+    textFontSizePrescale = f;
+
+    rescale();
+    
   }
 
   void setOffsetX(float f) {
     textOffsetX = f;
+    rescale();
   }
   
   void setOffsetY(float f) {
     textOffsetY = f;
+    rescale();
   }
   
   virtual void clickat(int , int )
@@ -101,7 +132,7 @@ public:
   virtual void setSizeY(int sy)
   {
     CairoGraphicController::setSizeY(sy);
-    textFontSize = textFontSizeRel*getSizeY();
+    rescale();
     
     need_to_cut = true;
   }
@@ -109,7 +140,8 @@ public:
   virtual void setSizeX(int sx)
   {
     CairoGraphicController::setSizeX(sx);
-
+    rescale();
+    
     need_to_cut = true;
   }
 
