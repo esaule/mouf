@@ -69,7 +69,7 @@ public:
     gl.allowInput(title, false);
     //title->setFontSize(2.);
     title->setOffsetY(.02);
-    title->setFontSize(.8);
+    title->setFontSize(.75);
 
     definition = new CairoTextDisplay ("definition");
     gl.addObject(definition);

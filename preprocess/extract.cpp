@@ -4,8 +4,19 @@
 #include "util.hpp"
 #include "definition.hpp"
 #include "genre.hpp"
+#include <vector>
 
-void extract_definition(const std::string& wikicode, std::string w) {
+struct dict_entry{
+  typedef std::string string;
+  
+  string word;
+  char genre;
+  string definition;
+};
+
+
+void extract_definition(const std::string& wikicode, std::string w,
+			std::vector<dict_entry>& out) {
   std::stringstream ss(wikicode);
 
   std::string line;
@@ -60,7 +71,7 @@ void extract_definition(const std::string& wikicode, std::string w) {
     if (starts_with(line, "# ")) {
       //      std::cout<<"DEFINITION :"<<line<<std::endl;
       //std::cout<<process_definition(line.substr(2, line.length()))<<std::endl;
-      def = process_definition(line.substr(2, line.length()));
+      def = trim(process_definition(line.substr(2, line.length())));
       got_definition = true;
     }
     if (starts_with(line, "#* ")) {
@@ -71,9 +82,15 @@ void extract_definition(const std::string& wikicode, std::string w) {
     if (got_genre && got_definition) {
       if (gen == '?')
 	std::cerr<<word<<"\t"<<gen<<"\t"<<def<<std::endl;
-      else
-	std::cout<<word<<"\t"<<gen<<"\t"<<def<<std::endl;
-
+      else {
+	dict_entry de;
+	de.word = word;
+	de.genre = gen;
+	de.definition = def;
+	out.push_back(de);
+	//	std::cout<<word<<"\t"<<gen<<"\t"<<def<<std::endl;
+      }
+      
       got_genre = false;
       got_definition = false;
     }
@@ -86,7 +103,8 @@ void extract_definition(const std::string& wikicode, std::string w) {
   
 }
 
-bool page(tinyxml2::XMLNode* page, std::string target) {
+bool page(tinyxml2::XMLNode* page, std::string target,
+	  std::vector<dict_entry>& out) {
   //std::cout<<page->Value()<<std::endl;
   
   tinyxml2::XMLNode* title = page->FirstChildElement("title");
@@ -120,7 +138,7 @@ bool page(tinyxml2::XMLNode* page, std::string target) {
 
   // std::cout<<std::endl<<"======"<<std::endl;
   
-  extract_definition (definition, word);
+  extract_definition (definition, word, out);
 
   return true;
 }
@@ -135,17 +153,30 @@ int main(int argc, char* argv[]) {
 
   tinyxml2::XMLNode* currentpage = root->FirstChildElement("page");
 
-  std::string target = argv[1];
+  std::string target = (argc>1?argv[1]:"-");
+
+  std::vector<dict_entry> dict;
   
   while (currentpage) {
     
-    bool ret = page(currentpage, target);
+    bool ret = page(currentpage, target, dict);
 
     if (ret && target.compare("-") != 0)
       break;
     
     currentpage = currentpage->NextSiblingElement("page");
   }
+
+  for (auto p : dict) {
+    if (p.genre != '?') {
+      if (p.definition.size() > 3) {
+	std::cout<<p.word
+		 <<"\t"<<p.genre
+		 <<"\t"<<p.definition<<'\n';
+      }
+    }
+  }
+  std::cout<<std::flush;
   
   return 0;
 }
