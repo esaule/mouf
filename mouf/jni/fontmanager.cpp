@@ -23,7 +23,8 @@ static void init() {
   
   int error = FT_Init_FreeType( library );
   if ( error ) {
-    std::cerr<<"error in freetype init"<<std::endl;
+    std::cerr<<"error in freetype init: "<<error<<std::endl;
+    std::cerr<<FT_Error_String( error )<<std::endl;
   }
 
   char* pathtottf = "data/font/BloggerSans.ttf";
